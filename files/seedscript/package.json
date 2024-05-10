@@ -1,0 +1,12 @@
+{
+  "name": "seeder_movieanalyst",
+  "version": "1.0.0",
+  "description": "seed database",
+  "main": "seed.js",
+  "scripts": {
+    "start": "node seeds.js"
+  },
+  "dependencies": {
+    "mysql2": "^3.6.0"
+  }
+}

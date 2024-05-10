@@ -1,0 +1,64 @@
+---
+
+- name: Download K8S key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+- name: Set Repository
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+
+- name: Update apt
+  apt:
+    update_cache: yes
+
+- name: Install Kubelet
+  apt:
+    name: kubelet=1.27.0-00
+    state: present
+
+- name: Install Kubectl
+  apt:
+    name: kubectl=1.27.0-00
+    state: present
+
+- name: Install kubeadm
+  apt:
+    name: kubeadm=1.27.0-00
+    state: present
+
+- name: Hold kubelet
+  dpkg_selections:
+    name: kubelet
+    selection: hold
+
+- name: Hold kubectl
+  dpkg_selections:
+    name: kubectl
+    selection: hold
+
+- name: Hold kubeadm
+  dpkg_selections:
+    name: kubeadm
+    selection: hold
+
+- name: Load modules for IP Forwarding
+  shell: | 
+          modprobe overlay
+          modprobe br_netfilter
+
+- name: Config for iptables
+  blockinfile:
+    path: /etc/sysctl.d/kubernetes.conf
+    create: yes
+    block: |
+            net.bridge.bridge-nf-call-ip6tables = 1
+            net.bridge.bridge-nf-call-iptables = 1
+            net.ipv4.ip_forward = 1
+
+- name: make all IPconfig persistent
+  shell: echo br_netfilter | tee /etc/modules-load.d/kubernetes.conf
+
+- name: configure sysctl
+  shell: sysctl --system
+

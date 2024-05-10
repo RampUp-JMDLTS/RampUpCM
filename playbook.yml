@@ -1,0 +1,44 @@
+---
+- name: Configure Master
+  hosts: master
+  become: yes
+  roles:
+  - common
+  # - container
+  # - kubernetes
+  # - kubemaster
+
+- name: Configure Nodes
+  hosts: workers
+  become: yes
+  roles:
+  - common
+  # - container
+  # - kubernetes
+  # - kubeworkers
+
+# - name: Set label worker for nodes
+#   hosts: master
+#   tasks:
+#     - name: Run command
+#       shell: kubectl label node "{{ item }}" node-role.kubernetes.io/worker=worker
+#       with_items: "{{ groups['workers'] }}"
+
+# - name: set label for each tipe of worker
+#   hosts: master
+#   tasks:
+#     - name: set frontend
+#       shell: kubectl label node "{{ item }}" appType=frontend
+#       with_items: 
+#       - rp-ss-front1
+#       - rp-ss-front2
+#     - name: set backend
+#       shell: kubectl label node "{{ item }}" appType=backend
+#       with_items: 
+#       - rp-ss-back1
+#       - rp-ss-back2
+
+# - name: Set Mysql 
+#   hosts: master
+#   roles:
+#     - mysql

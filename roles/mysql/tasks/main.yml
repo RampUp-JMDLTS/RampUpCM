@@ -1,0 +1,59 @@
+---
+
+- name: Install Mysql
+  apt:
+    name: mysql-client-core-8.0 
+  become: yes
+
+- name: Create user and config
+  shell: mysql -h rpmysqlserver.mysql.database.azure.com -u jmdlts -psecureP4sw rp_mysql_db -Bse "CREATE USER IF NOT EXISTS 'app_manager'@'%' IDENTIFIED BY 'r4mpUPbdpsw@' REQUIRE NONE;GRANT ALL PRIVILEGES ON rp_mysql_db.* TO 'app_manager'@'%' WITH GRANT OPTION;FLUSH PRIVILEGES;"
+
+- name: send sql file
+  copy:
+    src: ./files/firstmysqlconf.sql
+    dest: /tmp/firstmysqlconf.sql
+
+- name: create tables
+  shell: mysql -h rpmysqlserver.mysql.database.azure.com -u jmdlts -psecureP4sw rp_mysql_db < /tmp/firstmysqlconf.sql
+
+- name: send NodeJs Files
+  copy:
+    src: ./files/seedscript/
+    dest: /tmp/seedscript/
+
+- name: add nodejs key
+  become: yes
+  apt_key:
+    url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+    state: present
+
+- name: add nodejs nodesource
+  become: yes
+  apt_repository:
+    repo: "deb https://deb.nodesource.com/node_18.x {{ ansible_distribution_release }} main"
+    state: present
+    update_cache: yes
+
+- name: Install Node.js
+  become: yes
+  apt:
+    name: nodejs
+    state: present
+    
+- name: Use package install
+  shell: npm install
+  args: 
+    chdir: /tmp/seedscript
+  
+- name: Run node seeder
+  shell: npm start >> seed_runed.log
+  args: 
+    chdir: /tmp/seedscript
+    creates: seed_runed.log
+  environment: 
+    DB_HOST: "rpmysqlserver.mysql.database.azure.com"
+    DB_USER: "app_manager"
+    DB_PASS: "r4mpUPbdpsw@"
+    DB_NAME: "rp_mysql_db"
+    IMAGESSA_URL: "thisismyurl"
+  

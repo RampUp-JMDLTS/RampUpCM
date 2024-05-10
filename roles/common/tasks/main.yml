@@ -1,0 +1,14 @@
+---
+- name: Update apt
+  dnf:
+    update_cache: yes
+
+- name: Install http-transport
+  dnf:
+    name: apt-transport-https
+    state: present
+
+- name: Install curl
+  dnf:
+    name: curl
+    state: present
