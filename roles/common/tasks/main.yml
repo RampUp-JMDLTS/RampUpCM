@@ -7,8 +7,3 @@
   yum:
     name: yum-utils
     state: present
-
-- name: enabling docker
-  shell: |
-    sudo amazon-linux-extras enable docker
-  
