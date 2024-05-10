@@ -42,3 +42,9 @@
 - name: configure sysctl
   shell: sysctl --system
 
+- name: able Kubernetes service
+  systemd:
+    name: kubelet
+    state: started
+    enabled: yes
+    masked: no

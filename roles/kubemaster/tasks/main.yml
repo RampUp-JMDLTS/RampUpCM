@@ -1,10 +1,10 @@
 ---
 
 - name: init cluster
-  shell: kubeadm init >> cluster_initialized.log
+  command: kubeadm init 
+  run_once: true
   args:
     chdir: /home/ec2-user
-    creates: cluster_initialized.log # Solo ejecuta la tarea si ya no esta creado el file
 
 - name: Create dir for .kube
   file:
