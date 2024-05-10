@@ -1,19 +1,12 @@
 ---
 
-- name: Ensure the repo docker
-  yum_repository:
-    name: docker-ce
-    description: Docker CE Stable 
-    baseurl: https://download.docker.com/linux/centos/docker-ce.repo
-    state: present
-
 - name: Update yum
   yum:
     update_cache: yes
 
 - name: Install containerd
   yum:
-    name: containerd.io
+    name: containerd
     state: present
 
 - name: Create dir container d
