@@ -1,9 +1,11 @@
 ---
 
 - name: Ensure the repo docker
-  shell: sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  become: yes
+  become_user: root
+  shell: dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 
-- name: Update apt
+- name: Update dnf
   dnf:
     update_cache: yes
 

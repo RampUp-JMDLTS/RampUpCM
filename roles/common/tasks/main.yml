@@ -3,11 +3,6 @@
   dnf:
     update_cache: yes
 
-- name: Install curl
-  dnf:
-    name: curl
-    state: present
-
 - name: Install dnf-plugins-core
   dnf:
     name: dnf-plugins-core
