@@ -1,7 +1,8 @@
 ---
 
 - name: Ensure the repo docker
-  shell: yum-config-manager --add-repo --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+  yum_repository:
+    baseurl: https://download.docker.com/linux/rhel/docker-ce.repo
 
 - name: Update yum
   yum:
