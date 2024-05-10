@@ -8,33 +8,19 @@
     gpgcheck: yes
     repo_gpgcheck: yes
     gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-    exclude: kubelet kubeadm kubectl
-  become: yes
 
 - name: Update apt
   yum:
     update_cache: yes
 
-- name: Install Kubelet
+- name: Installing required packages
   yum:
-    name: kubelet
+    name: "{{ item }}"
     state: present
-    disable_excludes: Kubernetes
-  become: yes
-
-- name: Install Kubectl
-  yum:
-    name: kubectl
-    state: present
-    disable_excludes: Kubernetes
-  become: yes
-
-- name: Install kubeadm
-  yum:
-    name: kubeadm
-    state: present
-    disable_excludes: kubernetes
-  become: yes
+  with_items:
+    - kubelet
+    - kubeadm
+    - kubectl
 
 - name: Load modules for IP Forwarding
   shell: | 
