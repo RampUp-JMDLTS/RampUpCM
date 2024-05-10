@@ -1,9 +1,9 @@
 ---
 - name: Update apt
-  dnf:
+  yum:
     update_cache: yes
 
-- name: Install dnf-plugins-core
-  dnf:
-    name: dnf-plugins-core
+- name: Install yum utils
+  yum:
+    name: yum-utils
     state: present
