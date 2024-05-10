@@ -6,7 +6,7 @@
   - common
   - container
   - kubernetes
-  # - kubemaster
+  - kubemaster
 
 - name: Configure Nodes
   hosts: worker
@@ -15,14 +15,14 @@
   - common
   - container
   - kubernetes
-  # - kubeworkers
+  - kubeworkers
 
-# - name: Set label worker for nodes
-#   hosts: master
-#   tasks:
-#     - name: Run command
-#       shell: kubectl label node "{{ item }}" node-role.kubernetes.io/worker=worker
-#       with_items: "{{ groups['workers'] }}"
+- name: Set label worker for nodes
+  hosts: master
+  tasks:
+    - name: Run command
+      shell: kubectl label node "{{ item }}" node-role.kubernetes.io/worker=worker
+      with_items: "{{ groups['workers'] }}"
 
 # - name: set label for each tipe of worker
 #   hosts: master
