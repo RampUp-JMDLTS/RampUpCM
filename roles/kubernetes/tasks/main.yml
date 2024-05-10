@@ -1,14 +1,15 @@
 ---
-
-- name: Configuring Yum repo for Kubernetes
+- name: Configuramos el repositorio de Kubernetes
   yum_repository:
     name: Kubernetes
-    description: Yum for Kubernetes
-    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+    description: Repositorio oficial de Kubernetes
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
     enabled: yes
     gpgcheck: yes
-    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
     repo_gpgcheck: yes
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    exclude: kubelet kubeadm kubectl
+  become: yes
 
 - name: Update apt
   yum:
@@ -18,16 +19,22 @@
   yum:
     name: kubelet
     state: present
+    disable_excludes: Kubernetes
+  become: yes
 
 - name: Install Kubectl
   yum:
     name: kubectl
     state: present
+    disable_excludes: Kubernetes
+  become: yes
 
 - name: Install kubeadm
   yum:
     name: kubeadm
     state: present
+    disable_excludes: kubernetes
+  become: yes
 
 - name: Load modules for IP Forwarding
   shell: | 
