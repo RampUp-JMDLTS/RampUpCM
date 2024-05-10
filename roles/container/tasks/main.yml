@@ -1,9 +1,7 @@
 ---
 
-- name: Ensure the crb repository is enabled
-  dnf_config_manager:
-    name: https://download.docker.com/linux/fedora/docker-ce.repo
-    state: enabled
+- name: Ensure the repo docker
+  shell: sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 
 - name: Update apt
   dnf:
