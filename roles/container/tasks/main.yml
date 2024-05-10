@@ -1,7 +1,7 @@
 ---
 
 - name: Ensure the crb repository is enabled
-  community.general.dnf_config_manager:
+  dnf_config_manager:
     name: https://download.docker.com/linux/fedora/docker-ce.repo
     state: enabled
 
