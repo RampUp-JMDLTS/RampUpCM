@@ -13,3 +13,9 @@ keyed_groups:
 include_filters:
 - tag:Environment:
   - 'qa'
+
+compose:
+  ansible_host: public_ip_address
+  ansible_user: ec2-user
+  ansible_python_interpreter: /usr/bin/python3
+  ansible_ssh_common_args: '-o StrictHostKeyChecking=no'

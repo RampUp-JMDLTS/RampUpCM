@@ -9,7 +9,7 @@
   # - kubemaster
 
 - name: Configure Nodes
-  hosts: workers
+  hosts: worker
   become: yes
   roles:
   - common
