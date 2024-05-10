@@ -1,19 +1,16 @@
 ---
 
-- name: Download GPG key
-  apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-
-- name: Set Repository
-  apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+- name: Ensure the crb repository is enabled
+  community.general.dnf_config_manager:
+    name: https://download.docker.com/linux/fedora/docker-ce.repo
+    state: enabled
 
 - name: Update apt
-  apt:
+  dnf:
     update_cache: yes
 
 - name: Install containerd
-  apt:
+  dnf:
     name: containerd.io
     state: present
 

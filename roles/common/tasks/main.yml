@@ -7,3 +7,8 @@
   dnf:
     name: curl
     state: present
+
+- name: Install dnf-plugins-core
+  dnf:
+    name: dnf-plugins-core
+    state: present
