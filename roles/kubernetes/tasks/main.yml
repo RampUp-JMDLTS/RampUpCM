@@ -1,46 +1,33 @@
 ---
 
-- name: Download K8S key
-  apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-
-- name: Set Repository
-  apt_repository:
-    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+- name: Configuring Yum repo for Kubernetes
+  yum_repository:
+    name: Kubernetes
+    description: Yum for Kubernetes
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    repo_gpgcheck: yes
 
 - name: Update apt
-  apt:
+  yum:
     update_cache: yes
 
 - name: Install Kubelet
-  apt:
-    name: kubelet=1.27.0-00
+  yum:
+    name: kubelet
     state: present
 
 - name: Install Kubectl
-  apt:
-    name: kubectl=1.27.0-00
+  yum:
+    name: kubectl
     state: present
 
 - name: Install kubeadm
-  apt:
-    name: kubeadm=1.27.0-00
-    state: present
-
-- name: Hold kubelet
-  dpkg_selections:
-    name: kubelet
-    selection: hold
-
-- name: Hold kubectl
-  dpkg_selections:
-    name: kubectl
-    selection: hold
-
-- name: Hold kubeadm
-  dpkg_selections:
+  yum:
     name: kubeadm
-    selection: hold
+    state: present
 
 - name: Load modules for IP Forwarding
   shell: | 

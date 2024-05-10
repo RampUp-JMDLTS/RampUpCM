@@ -5,7 +5,7 @@
   roles:
   - common
   - container
-  # - kubernetes
+  - kubernetes
   # - kubemaster
 
 - name: Configure Nodes
@@ -14,7 +14,7 @@
   roles:
   - common
   - container
-  # - kubernetes
+  - kubernetes
   # - kubeworkers
 
 # - name: Set label worker for nodes
