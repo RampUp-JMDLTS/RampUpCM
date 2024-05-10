@@ -1,7 +1,10 @@
 ---
 
 - name: Ensure the repo docker
-  shell: yum-config-manager --add-repo "https://download.docker.com/linux/centos/docker-ce.repo"
+  yum_repository:
+    name: containerd.io
+    baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+    state: present
 
 - name: Update yum
   yum:
