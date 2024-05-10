@@ -1,4 +1,8 @@
 ---
+- name: remove all things related to cluster
+  shell: kubeadm reset -f
+  ignore_errors: yes
+
 - name: empty file for Kubeadm configure
   copy:
     content: ""
