@@ -13,14 +13,6 @@
         state: present
       when: hostvars[item].ansible_host is defined
       with_items: "{{ groups.all }}"
-
-    - name: "Allow all in UFW for the other instances"
-      ufw:
-        rule: allow
-        proto: any
-        from_ip: "{{ hostvars[item].ansible_host }}"
-      loop: "{{ groups.all }}"
-      when: inventory_hostname != item
   
 
 - name: Configure Master
