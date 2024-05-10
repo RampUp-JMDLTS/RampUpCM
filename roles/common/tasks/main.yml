@@ -7,3 +7,8 @@
   yum:
     name: yum-utils
     state: present
+
+- name: Install tc
+  yum:
+    name: iproute-tc
+    state: present
