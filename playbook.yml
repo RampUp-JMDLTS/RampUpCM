@@ -1,4 +1,17 @@
 ---
+
+- name: Add IP address of all hosts to all hosts
+  hosts: all
+  tasks:
+    - name: Add IP address of all hosts to /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '.*{{ item }}$'
+        line: "{{ hostvars[item].ansible_host }} {{item}}"
+        state: present
+      when: hostvars[item].ansible_host is defined
+      with_items: "{{ groups.all }}"
+
 - name: Configure Master
   hosts: master
   become: yes
