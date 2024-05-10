@@ -18,26 +18,17 @@
         apiVersion: kubeadm.k8s.io/v1beta3
         localAPIEndpoint:
           advertiseAddress: {{ansible_host}}
-        ---
-        kind: KubeletConfiguration
-        apiVersion: kubelet.config.k8s.io/v1beta1
-        runtimeRequestTimeout: "15m"
-        cgroupDriver: "systemd"
-        systemReserved:
-          cpu: 100m
-          memory: 350M
-        kubeReserved:
-          cpu: 100m
-          memory: 50M
-        enforceNodeAllocatable:
-        - pods
-
+        
 
 - name: init cluster
   command: kubeadm init --config /etc/kubernetes/kubeadm-config.yaml --ignore-preflight-errors=NumCPU,Mem
-  run_once: true
+  register: kubeadd_cmd
   args:
     chdir: /home/ec2-user
+
+- name: Mostrando la salida de la ejecución del kubeadm init
+  debug:
+    msg: "{{ kubeadd_cmd.stdout_lines }}"
 
 - name: Create dir for .kube
   file:
@@ -56,7 +47,7 @@
     owner: "{{ ansible_effective_user_id }}"
     group: "{{ ansible_effective_group_id }}"
 
-- name: Set calico for networking between pods
+- name: Set flannel for networking between pods
   become: yes
   become_user: ec2-user
   shell: kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
