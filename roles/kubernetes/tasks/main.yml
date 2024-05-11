@@ -17,15 +17,26 @@
 - name: Apply sysctl parameters
   command: sysctl --system
 
+- name: Desactivar SELinux temporalmente
+  command: setenforce 0
+  ignore_errors: yes
+
+- name: Configurar SELinux en modo permisivo
+  lineinfile:
+    path: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: 'SELINUX=permissive'
+  become: yes
+
 - name: Configuring Kubernetes Repo
   yum_repository:
     name: kubernetes
     description: Repositorio oficial de Kubernetes
-    baseurl: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
+    baseurl: https://pkgs.k8s.io/core:/stable:/v1.30/rpm/
     enabled: yes
     gpgcheck: yes
     repo_gpgcheck: yes
-    gpgkey: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
+    gpgkey: https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key
     exclude: kubelet kubeadm kubectl cri-tools kubernetes-cni
 
 - name: Update apt
