@@ -62,7 +62,6 @@
     reboot_timeout: 80
     connect_timeout: 80
     test_command: uptime
-  when: update | bool
 
 - name: "Waiting for the server to come back up"
   local_action: 
