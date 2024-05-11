@@ -55,9 +55,20 @@
   sysctl:
     name: net.ipv4.ip_forward
     value: 1
-    
-- name: Reboot
+
+- name: Reboot instance.
   reboot:
+    post_reboot_delay: 20
+    reboot_timeout: 80
+    connect_timeout: 80
+    test_command: uptime
+  when: update | bool
+
+- name: "Waiting for the server to come back up"
+  local_action: 
+    wait_for host={{ internal_ip }} 
+    port=22 state=started delay=30 timeout=300
+  become: false
 
 - name: enable Kubernetes service
   systemd:
