@@ -1,13 +1,32 @@
 ---
-- name: Configuramos el repositorio de Kubernetes
+- name: Create an empty file for K8S sysctl parameters
+  copy:
+    content: ""
+    dest: /etc/sysctl.d/99-kubernetes-cri.conf
+    force: no
+
+- name: Configure sysctl parameters for K8S
+  lineinfile:
+    path: /etc/sysctl.d/99-kubernetes-cri.conf
+    line: "{{ item }}"
+  with_items:
+    - "net.bridge.bridge-nf-call-iptables  = 1"
+    - "net.ipv4.ip_forward                 = 1"
+    - "net.bridge.bridge-nf-call-ip6tables = 1"
+
+- name: Apply sysctl parameters
+  command: sysctl --system
+
+- name: Configuring Kubernetes Repo
   yum_repository:
     name: kubernetes
     description: Repositorio oficial de Kubernetes
-    baseurl: https://pkgs.k8s.io/core:/stable:/v1.27/rpm/
+    baseurl: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
     enabled: yes
     gpgcheck: yes
     repo_gpgcheck: yes
-    gpgkey: https://pkgs.k8s.io/core:/stable:/v1.27/rpm/repodata/repomd.xml.key
+    gpgkey: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
+    exclude: kubelet kubeadm kubectl cri-tools kubernetes-cni
 
 - name: Update apt
   yum:
@@ -17,32 +36,30 @@
   yum:
     name: "{{ item }}"
     state: present
+    disable_excludes: kubernetes
   with_items:
-    - kubelet=1.27
-    - kubeadm=1.27
-    - kubectl=1.27
+    - kubelet
+    - kubeadm
 
-- name: Load modules for IP Forwarding
-  shell: | 
-          modprobe overlay
-          modprobe br_netfilter
+- name: Load br_netfilter kernel module
+  modprobe:
+    name: br_netfilter
+    state: present
 
-- name: Config for iptables
-  blockinfile:
-    path: /etc/sysctl.d/kubernetes.conf
-    create: yes
-    block: |
-            net.bridge.bridge-nf-call-ip6tables = 1
-            net.bridge.bridge-nf-call-iptables = 1
-            net.ipv4.ip_forward = 1
+- name: Set bridge-nf-call-iptables
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
 
-- name: make all IPconfig persistent
-  shell: echo br_netfilter | tee /etc/modules-load.d/kubernetes.conf
+- name: Set ip_forward
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    
+- name: Reboot
+  reboot:
 
-- name: configure sysctl
-  shell: sysctl --system
-
-- name: able Kubernetes service
+- name: enable Kubernetes service
   systemd:
     name: kubelet
     state: started

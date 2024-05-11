@@ -1,5 +1,18 @@
 ---
 
+- name: Create an empty file for the containerd module
+  copy:
+    content: ""
+    dest: /etc/modules-load.d/containerd.conf
+    force: no
+
+- name: Configure modules for containerd
+  blockinfile:
+    path: /etc/modules-load.d/containerd.conf
+    block: |
+      overlay
+      br_netfilter
+
 - name: Update yum
   yum:
     update_cache: yes
@@ -9,13 +22,13 @@
     name: containerd
     state: present
 
-- name: Create dir container d
+- name: Create containerd directory
   file:
     path: /etc/containerd
     state: directory
 
-- name: configure container d
-  shell: containerd config default | tee /etc/containerd/config.toml > /dev/null
+- name: Add containerd configuration
+  shell: /usr/bin/containerd config default > /etc/containerd/config.toml
 
 - name: change systemdgroup 
   lineinfile:
@@ -23,8 +36,9 @@
     regexp: '^SystemdCgroup = false$'
     line: SystemdCgroup = true
 
-- name: restart containerd service
-  service:
+- name: Enable the containerd service and start service
+  systemd:
     name: containerd
     state: restarted
     enabled: yes
+    daemon-reload: yes
