@@ -39,7 +39,9 @@
     owner: "{{ ansible_effective_user_id }}"
     group: "{{ ansible_effective_group_id }}"
 
-- name: Set flannel for networking between pods
+- name: Install Pod Network
+  become: yes
+  become_user: ec2-user
   shell: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
 
 - name: Get join token
