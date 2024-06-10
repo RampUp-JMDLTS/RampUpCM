@@ -32,11 +32,11 @@
   yum_repository:
     name: kubernetes
     description: Repositorio oficial de Kubernetes
-    baseurl: https://pkgs.k8s.io/core:/stable:/v1.30/rpm/
+    baseurl: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
     enabled: yes
     gpgcheck: yes
     repo_gpgcheck: yes
-    gpgkey: https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key
+    gpgkey: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
     exclude: kubelet kubeadm kubectl cri-tools kubernetes-cni
 
 - name: Update apt
